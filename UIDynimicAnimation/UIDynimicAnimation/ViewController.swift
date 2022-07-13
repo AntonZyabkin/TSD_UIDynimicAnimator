@@ -9,23 +9,48 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    let square = UIView ()
+    var squareViews = [UIDynamicItem]()
     var animation = UIDynamicAnimator ()
     
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        square.frame = CGRect (x: 200, y: 50, width: 30, height: 30)
-        square.backgroundColor = .red
-        view.addSubview(square)
-        
-        animation = UIDynamicAnimator(referenceView: square)
-        let gravity = UIGravityBehavior (items: [square])
-        animation.addBehavior(gravity)
+
+         
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        let numberOfItems = 2
+        squareViews.reserveCapacity(numberOfItems)
+        let colors = [UIColor.red, UIColor.systemMint]
+        var curentCenterPiont : CGPoint = view.center
+        let eachViewSize = CGSize (width: 50, height: 50)
+        
+        for counter in 0..<numberOfItems {
+            let newView = UIView (frame: CGRect (x: 0, y: 0, width: eachViewSize.width, height: eachViewSize.height))
+            newView.backgroundColor = colors[counter]
+            newView.center = curentCenterPiont
+            curentCenterPiont.y += eachViewSize.height + 20
+            view.addSubview(newView)
+            squareViews.append(newView)
+        }
+        
+        //добавим гравитационное поведение для нашего массива вью
+        animation = UIDynamicAnimator(referenceView: view)
+        let gravity = UIGravityBehavior (items: squareViews)
+        animation.addBehavior(gravity)
+        
+        
+        //добавим столкновение объектов
+        let collition = UICollisionBehavior (items: squareViews)
+        collition.translatesReferenceBoundsIntoBoundary = true
+        collition.addBoundary(withIdentifier: "bottomBoundary" as NSCopying, from: CGPoint(x: 0, y: view.bounds.height - 50), to: CGPoint (x: view.bounds.size.width, y: view.bounds.height - 50))
+        animation.addBehavior(collition)
 
 
+        //
+    }
+    
 }
 
