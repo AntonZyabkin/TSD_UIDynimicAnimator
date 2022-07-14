@@ -7,6 +7,12 @@
 
 import UIKit
 
+//Что используем в данном уроке:
+//UICollisionVehavior - обнируживает столкновение объектов
+//UIGravityBehavior - обеспечивает тяготерие
+//UIPushBehavior   - реагирует на толчки
+// UISnapBehavior  -крепит Вью к определенной точке
+
 class ViewController: UIViewController {
     
     var squareViews = [UIDynamicItem]()
