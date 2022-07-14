@@ -11,6 +11,11 @@ class ViewController: UIViewController {
     
     var squareViews = [UIDynamicItem]()
     var animation = UIDynamicAnimator ()
+    var pushBeahavior = UIPushBehavior ()
+    
+    //вторая авриация исполнения
+    var squareView2 = UIView ()
+    var animator2 = UIDynamicAnimator ()
     
     
 
@@ -53,9 +58,74 @@ class ViewController: UIViewController {
 
         collition.collisionDelegate = self
         //
+        
+        
+        createGestureRecognizer ()
+        createSmallSquareView2 ()
+        createAnimationBehavior ()
+    }
+    
+    
+    
+    
+    
+    
+    //____________________ВТОРАЯ ЗАДАЧА
+    //создаем квадрат 100Х100
+    func createSmallSquareView2 () {
+        squareView2 = UIView (frame: CGRect (x: 100, y: 100, width: 100 , height: 100))
+        squareView2.backgroundColor = .systemPink
+        view.addSubview(squareView2)
+    }
+    
+    //создадим жест
+    func createGestureRecognizer () {
+        let tabGestureRecognizer = UITapGestureRecognizer (target: self, action: #selector(henrler))
+        
+        
+        view.addGestureRecognizer(tabGestureRecognizer)
+    }
+    
+    
+    //зададим столкновение  и толчек у View
+    
+    func createAnimationBehavior () {
+        animator2 = UIDynamicAnimator (referenceView: view)
+        
+        let collision = UICollisionBehavior (items: [squareView2])
+        collision.translatesReferenceBoundsIntoBoundary = true
+        pushBeahavior = UIPushBehavior (items: [squareView2], mode: .continuous)
+        animator2.addBehavior(collision)
+        animator2.addBehavior(pushBeahavior)
+    }
+    @objc func henrler (paramTap: UITapGestureRecognizer) {
+        //Получаем угол ВЬю
+        let tapPoint : CGPoint = paramTap.location(in: view)
+        let squareViewCenterPoint : CGPoint = squareView2.center
+        //определяем угол толчка
+        // arcTan 2 * ((p1.x - p2.x), (p1.y - p2.y))
+        let deltaX : CGFloat = tapPoint.x - squareViewCenterPoint.x
+        let deltaY : CGFloat = tapPoint.y - squareViewCenterPoint.y
+        let angel : CGFloat = atan2(deltaY, deltaX)
+        pushBeahavior.angle = angel
+        
+        let distanceBetweenPints : CGFloat = sqrt(pow(tapPoint.x - squareViewCenterPoint.x, 2.0) + pow (tapPoint.y - squareViewCenterPoint.y, 2.0))
+        pushBeahavior.magnitude = distanceBetweenPints / 200
     }
     
 }
+
+
+
+
+
+
+
+
+
+
+
+
 //переопределим наш ВьюКонтроллер чтобы добавить в него метод collisionBehavior делегата UICollisionBehaviorDelegatе. Этот метод будет отслеживать когда объекты с определенным идентификатором поведения "столкновение/collition" коснуться заданной границы
 extension ViewController : UICollisionBehaviorDelegate {
     func collisionBehavior(_ behavior: UICollisionBehavior, beganContactFor item: UIDynamicItem, withBoundaryIdentifier identifier: NSCopying?, at p: CGPoint) {
@@ -66,7 +136,7 @@ extension ViewController : UICollisionBehaviorDelegate {
                 let view = item as? UIView
                 view?.backgroundColor = .red //при столкновении меняем цвет
                 view?.alpha = 0  //меняем прозрачность
-                view?.transform = CGAffineTransform (scaleX: 0.3, y: 0.3) //меняем масштаб скейл
+                view?.transform = CGAffineTransform (scaleX: 0.7, y: 0.7) //меняем масштаб скейл
             } completion: { (finished) in
 
                 let view = item  as? UIView
