@@ -96,7 +96,7 @@ class ViewController: UIViewController {
         circle.center = view.center
         createGestureRecognizer ()
         creareAnimatorAndBehavior ()
-        addCollision ()
+        addCollision (array: [circle, leftBottomLabel, leftTobLabel, rightTopLabel, rightBottomLabel])
     }
 
     
@@ -129,16 +129,39 @@ class ViewController: UIViewController {
         animator.addBehavior(snapBehavior!)
     }
     
-    func addCollision () {
-        let collition = UICollisionBehavior (items: [circle, leftBottomLabel, leftTobLabel, rightTopLabel, rightBottomLabel])
+    func addCollision (array: [UIDynamicItem]) {
+        let collition = UICollisionBehavior (items: array)
         collition.translatesReferenceBoundsIntoBoundary = true
         collition.addBoundary(
             withIdentifier: "bottomBoundary" as NSCopying,
-            from: CGPoint(x: 0, y: view.bounds.height - 50),
-            to: CGPoint (x: view.bounds.size.width, y: view.bounds.height - 50))
+            from: CGPoint(x: 0, y: 850),
+            to: CGPoint (x: view.bounds.size.width, y: 850))
         animator.addBehavior(collition)
 
         collition.collisionDelegate = self
+    }
+    
+    
+    
+    //создадим функцию генерящую лейбл
+    func createLabelAfterCollision (text: String) {
+        let newLabel = UILabel (frame: CGRect (x: view.center.x, y: 400, width: 200, height: 50))
+        newLabel.backgroundColor = .systemYellow
+        newLabel.alpha = 0.3
+        newLabel.text = text
+        newLabel.textAlignment = .center
+        newLabel.layer.cornerRadius = 25
+        newLabel.layer.masksToBounds = true
+        let randomInt = Int.random(in: 100..<314)
+        newLabel.center.x = CGFloat(randomInt)
+        
+        let collition = UICollisionBehavior (items: [newLabel])
+        collition.translatesReferenceBoundsIntoBoundary = true
+        animator.addBehavior(collition)
+        addCollision (array: [newLabel])
+        let gravity = UIGravityBehavior (items: [newLabel])
+        animator.addBehavior(gravity)
+        view.addSubview(newLabel)
     }
     
 }
@@ -148,8 +171,7 @@ extension ViewController : UICollisionBehaviorDelegate {
     
     func collisionBehavior(_ behavior: UICollisionBehavior, beganContactFor item1: UIDynamicItem, with item2: UIDynamicItem, at p: CGPoint) {
         let item2Label = item2 as? UILabel
-        
-        print ((item2Label?.text)!)
+        createLabelAfterCollision (text: (item2Label?.text)!)
         
     }
     func collisionBehavior(_ behavior: UICollisionBehavior, beganContactFor item: UIDynamicItem, withBoundaryIdentifier identifier: NSCopying?, at p: CGPoint) {

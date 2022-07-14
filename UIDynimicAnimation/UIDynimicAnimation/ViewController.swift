@@ -87,8 +87,6 @@ class ViewController: UIViewController {
     //создадим жест
     func createGestureRecognizer () {
         let tabGestureRecognizer = UITapGestureRecognizer (target: self, action: #selector(henrler))
-        
-        
         view.addGestureRecognizer(tabGestureRecognizer)
     }
     
