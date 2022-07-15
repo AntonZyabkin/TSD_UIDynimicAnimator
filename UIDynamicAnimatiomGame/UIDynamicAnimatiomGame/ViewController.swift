@@ -13,8 +13,6 @@ class ViewController: UIViewController {
     var snapBehavior : UISnapBehavior?
     var collition = UICollisionBehavior ()
     var curentNumberOfViews = 6
-    var arrayOfViewTags : [Int] = []
-    
 
     var circle = UIView()
     var leftTobLabel = UILabel ()
@@ -26,8 +24,6 @@ class ViewController: UIViewController {
         createVIews ()
         super.viewDidLoad()
         collition.collisionDelegate = self
-        arrayOfViewTags.append(contentsOf: [1, 2, 3, 4, 5])
-        
     }
 
     
@@ -52,7 +48,7 @@ class ViewController: UIViewController {
         circle.clipsToBounds = true
         circle.tag = 1
         
-        leftTobLabel = UILabel (frame: CGRect(x: 214, y: 200, width: 100, height: 100))
+        leftTobLabel = UILabel (frame: CGRect(x: 215, y: 201, width: 100, height: 100))
         leftTobLabel.backgroundColor = .purple
         leftTobLabel.layer.cornerRadius = 25
         leftTobLabel.layer.maskedCorners = .layerMaxXMaxYCorner
@@ -61,10 +57,8 @@ class ViewController: UIViewController {
         leftTobLabel.textAlignment = .center
         leftTobLabel.numberOfLines = 0
         leftTobLabel.clipsToBounds = true
-        leftTobLabel.tag = 2
         
-        
-        leftBottomLabel = UILabel (frame: CGRect(x: 214, y: 100, width: 100, height: 100))
+        leftBottomLabel = UILabel (frame: CGRect(x: 216, y: 100, width: 100, height: 100))
         leftBottomLabel.backgroundColor = .systemTeal
         leftBottomLabel.layer.cornerRadius = 25
         leftBottomLabel.layer.maskedCorners = .layerMaxXMinYCorner
@@ -72,10 +66,9 @@ class ViewController: UIViewController {
         leftBottomLabel.clipsToBounds = true
         leftBottomLabel.text = "QUITE"
         leftBottomLabel.textAlignment = .center
-        leftBottomLabel.tag = 3
         leftBottomLabel.numberOfLines = 0
         
-        rightTopLabel = UILabel (frame: CGRect(x: 114, y: 200, width: 100, height: 100))
+        rightTopLabel = UILabel (frame: CGRect(x: 114, y: 201, width: 100, height: 100))
         rightTopLabel.backgroundColor = .gray
         rightTopLabel.layer.cornerRadius = 25
         rightTopLabel.layer.maskedCorners = .layerMinXMaxYCorner
@@ -84,7 +77,6 @@ class ViewController: UIViewController {
         rightTopLabel.text = "RESTART"
         rightTopLabel.textAlignment = .center
         rightTopLabel.numberOfLines = 0
-        rightTopLabel.tag = 4
         
         rightBottomLabel = UILabel (frame: CGRect(x: 114, y: 100, width: 100, height: 100))
         rightBottomLabel.backgroundColor = .systemPink
@@ -95,7 +87,6 @@ class ViewController: UIViewController {
         rightBottomLabel.text = "OUT"
         rightBottomLabel.textAlignment = .center
         rightBottomLabel.numberOfLines = 0
-        rightBottomLabel.tag = 5
     }
     
     func createGestureRecognizer () {
@@ -162,8 +153,6 @@ class ViewController: UIViewController {
         let gravity = UIGravityBehavior (items: [newLabel])
         animator.addBehavior(gravity)
         view.addSubview(newLabel)
-        arrayOfViewTags.append(curentNumberOfViews)
-        newLabel.tag = curentNumberOfViews
         curentNumberOfViews += 1
     }
     
@@ -185,7 +174,6 @@ class ViewController: UIViewController {
         createVIews ()
         animateView(restart)
         collition.collisionDelegate = self
-        arrayOfViewTags.append(contentsOf: [1, 2, 3, 4, 5])
         view.addSubview(leftTobLabel)
         view.addSubview(leftBottomLabel)
         view.addSubview(rightTopLabel)
@@ -239,9 +227,8 @@ extension ViewController : UICollisionBehaviorDelegate {
                 view?.removeFromSuperview()
             }
 
-            print(self.arrayOfViewTags)
-            print(view.subviews.count)
         }
+        print (view.subviews.count)
         if view.subviews.count == 1 {
             restartGameButton()
         }
